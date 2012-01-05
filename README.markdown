@@ -172,3 +172,59 @@ JSON:
 - a is present
 - b is absent
 - c is present
+
+Counters
+===
+
+G-Counter
+---
+
+A G-Counter is a grow-only counter (inspired by vector clocks) in
+which only increment and merge are possible. Incrementing the counter
+adds 1 to the count for the current actor. Divergent histories are
+resolved by taking the maximum count for each actor (like a vector
+clock merge).  The value of the counter is the sum of all actor
+counts.
+
+JSON:
+
+``` javascript
+{
+  'type': 'g-counter',
+  'e': {
+    'a': 1,
+    'b': 5,
+    'c': 2
+  }
+}
+```
+
+- The counter value is 8.
+
+PN-Counter
+---
+
+PN-Counters allow the counter to be decreased by tracking the
+increments (P) separate from the decrements (N), both represented as
+internal G-Counters.  Merge is handled by merging the internal P and N
+counters. The value of the counter is the value of the P counter minus
+the value of the N counter.
+
+JSON:
+
+``` javascript
+{
+  'type': 'pn-counter',
+  'p': {
+    'a': 10,
+    'b': 2
+  },
+  'n': {
+    'c': 5,
+    'a': 1
+  }
+}
+```
+
+- P=12, N=6, so the value is 6.
+
