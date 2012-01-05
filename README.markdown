@@ -43,29 +43,6 @@ JSON:
 
 In this set, only 'a' is present.
 
-U-Set
----
-
-TODO: Not sure how to implement this in a state-based system without causal
-ordering guarantees. Suggestions?
-
-U-Sets are a simplification of 2P-Sets.
-
-1. Elements must be unique: a removed element will never be added again.
-2. Add(e) is delivered before remove(e).
-
-The remove set is therefore redundant; one can delete any element which is
-present. Simultaneous adds and deletes of the same element are not allowed.
-
-JSON:
-
-``` javascript
-{
-  'type': 'u-set',
-  'a': ['a', 'b', 'c']
-}
-```
-
 LWW-Element-Set
 ---
 
