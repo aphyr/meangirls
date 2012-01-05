@@ -14,7 +14,7 @@ simultaneous writes to a set *which only allows addition*. You cannot remove an
 element of a G-Set.
 
 JSON:
-``` json
+``` javascript
 {
   'type': 'g-set',
   'e': ['a', 'b', 'c']
@@ -31,7 +31,7 @@ only be removed if they are present in the set. Removes take precedence over
 adds.
 
 JSON:
-``` json
+``` javascript
 {
   'type': '2p-set',
   'a': ['a', 'b'],
@@ -56,7 +56,7 @@ The remove set is therefore redundant; one can delete any element which is
 present. Simultaneous adds and deletes of the same element are not allowed.
 
 JSON:
-``` json
+``` javascript
 {
   'type': 'u-set',
   'a': ['a', 'b', 'c']
@@ -92,7 +92,7 @@ In JSON, we write the set as a list of 2- or 3-tuples: [element, add-time] or
 [element, add-time, delete-time]
 
 JSON:
-``` json
+``` javascript
 {
   'type': 'lww-e-set',
   'bias': 'a',
@@ -135,7 +135,7 @@ insertion tags and the union of the deletion tags.
 Tags may be any primitive: strings, ints, floats, etc.
 
 JSON:
-``` json
+``` javascript
 {
   'type': 'or-set',
   'e': [
@@ -175,7 +175,7 @@ preferred.
 In JSON, max-change sets are represented as a list of [element, n] tuples.
 
 JSON:
-``` json
+``` javascript
 {
   'type': 'mc-set',
   'e': [
