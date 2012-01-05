@@ -19,6 +19,7 @@ JSON:
   'type': 'g-set',
   'e': ['a', 'b', 'c']
 }
+```
 
 2P-Set
 ---
@@ -36,6 +37,7 @@ JSON:
   'a': ['a', 'b'],
   'r': ['b']
 }
+```
 
 In this set, only 'a' is present.
 
@@ -59,6 +61,7 @@ JSON:
   'type': 'u-set',
   'a': ['a', 'b', 'c']
 }
+```
 
 LWW-Element-Set
 ---
@@ -100,6 +103,7 @@ JSON:
     ['d', 3, 3]
   ]
 }
+```
 
 In this set:
 
@@ -140,6 +144,7 @@ JSON:
     ['c', [1, 2], [2, 3]]
   ]
 }
+```
 
 - a exists.
 - b's only insertion was deleted, so it does not exist.
@@ -179,6 +184,7 @@ JSON:
     ['c', 3]
   ]
 }
+```
 
 - a is present
 - b is absent
