@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'open3'
+require 'find'
+
+tests = []
+
+files, args = ARGV.partition do |arg|
+  File.exists? arg
+end
+
+dirs = files.empty? ? [File.dirname(__FILE__)] : files
+dirs.each do |dir|
+  Find.find(dir) do |path|
+    next unless path =~ /\.rb$/
+    next if path =~ /\/init\.rb$/
+    tests << path
+  end
+end
+
+system *(["bacon", "-r", File.expand_path(File.dirname(__FILE__) + "/init.rb")] + args + tests.sort)
