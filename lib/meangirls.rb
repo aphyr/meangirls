@@ -5,6 +5,8 @@ module Meangirls
   class DeleteNotAllowed < RuntimeError; end
 
   require 'set'
+  require 'base64'
+  require 'securerandom'
   require 'meangirls/crdt'
   
   # Transforms a JSON data structure into a CRDT datatype.
@@ -17,4 +19,10 @@ module Meangirls
     end
   end
   module_function :parse
+
+  # Return a pseudounique tag.
+  def tag
+    SecureRandom.urlsafe_base64
+  end
+  module_function :tag
 end
