@@ -14,6 +14,8 @@ module Meangirls
     case s['type']
     when '2p-set'
       TwoPhaseSet.new s
+    when 'lww-set'
+      LWWSet.new s
     else
       raise ArgumentError, "unknown type #{s['type']}"
     end
@@ -25,4 +27,15 @@ module Meangirls
     SecureRandom.urlsafe_base64
   end
   module_function :tag
+  
+  # An ISO8601 time as close to the current time as possible, with the
+  # additional constraint that successive calls to this method will return
+  # monotonically increasing values.
+  #
+  # TODO: fold counter inside of time fraction
+  def timestamp
+    @i ||= 0
+    "#{Time.now.utc.iso8601}.#{@i += 1}"
+  end
+  module_function :timestamp
 end

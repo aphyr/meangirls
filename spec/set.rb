@@ -4,19 +4,32 @@ shared :set do
     n.should.be.empty
   end
 
-  should '==' do
-    @s.should == @s
-    a = @class.new
-    b = @class.new
-    a.should == b
-    a << 1
-    a.should.not == b
-    b << 1
-    a.should == b
-    a.delete 1
-    a.should.not == b
-    b.delete 1
-    a.should == b
+  if @idempotent
+    should '==' do
+      @s.should == @s
+      a = @class.new
+      b = @class.new
+      a.should == b
+      a << 1
+      a.should.not == b
+      b << 1
+      a.should == b
+      a.delete 1
+      a.should.not == b
+      b.delete 1
+      a.should == b
+    end
+  else
+    should '==' do
+      @s.should == @s
+      a = @class.new
+      b = @class.new
+      a.should == b
+      a << 1
+      a.should == a
+      a.delete 1
+      a.should == a
+    end
   end
 
   should '===' do
@@ -57,7 +70,7 @@ shared :set do
     a << 2
     (a | []).should == a
     (a | []).should === [1,2]
-    (a | [2,3]).should == (a << 3)
+    (a | [2,3]).should == (a << 3) if @idempotent
     (a | [2,3]).should === [1,2,3]
   end
 
@@ -133,22 +146,27 @@ shared :set do
 
   ([@s.bias] | (@class.biases rescue [])).each do |bias|
     should "merge biased towards #{bias}" do
+      Meangirls.expects(:timestamp).times(0..3).returns(0)
       case bias
       when 'a'
         # Should preserve adds
         a = @class.new
+        a.bias = 'a' if a.respond_to? :bias=
         a << 1
         a.delete 1
         b = @class.new
+        b.bias = 'a' if b.respond_to? :bias=
         b << 1
         a.merge(b).should === [1]
         b.merge(a).should == a.merge(b)
       when 'r'
         # Should preserve deletes
         a = @class.new
+        a.bias = 'r' if a.respond_to? :bias=
         a << 1
         a.delete 1
         b = @class.new
+        b.bias = 'r' if b.respond_to? :bias=
         b << 1
         a.merge(b).should === []
         b.merge(a).should == a.merge(b)

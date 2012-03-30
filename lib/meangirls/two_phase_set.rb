@@ -81,10 +81,6 @@ class Meangirls::TwoPhaseSet < Meangirls::Set
     @a.include? e and not @r.include? e
   end
 
-  def size
-    to_set.size
-  end
-
   def to_set
     @a - @r
   end
