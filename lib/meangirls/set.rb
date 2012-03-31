@@ -1,6 +1,7 @@
 class Meangirls::Set < Meangirls::CRDT
   require 'meangirls/two_phase_set'
   require 'meangirls/lww_set'
+  require 'meangirls/or_set'
 
   include Enumerable
 

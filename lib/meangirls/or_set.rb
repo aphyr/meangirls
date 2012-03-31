@@ -1,5 +1,19 @@
 class Meangirls::ORSet < Meangirls::Set
-  Pair = Struct :adds, :removes
+  class Pair
+    attr_accessor :adds, :removes
+    def initialize(adds = [], removes = [])
+      @adds = adds
+      @removes = removes
+    end
+
+    def to_s
+      inspect
+    end
+
+    def inspect
+      "(#{adds.inspect}, #{removes.inspect})"
+    end
+  end
   
   def self.biases
     ['a']
@@ -28,7 +42,7 @@ class Meangirls::ORSet < Meangirls::Set
   def ==(other)
     other.kind_of? self.class and
     (@e.keys | other.e.keys).all? do |e, pair|
-      a = @e[e] and b = other[e] and
+      a = @e[e] and b = other.e[e] and
       uaeq(a.adds, b.adds) and
       uaeq(a.removes, b.removes)
     end
@@ -37,14 +51,15 @@ class Meangirls::ORSet < Meangirls::Set
   # Inserts e into the set. Tag will be randomly generated if not given.
   def add(e, tag = Meangirls.tag)
     pair = (@e[e] ||= Pair.new)
-    pair.adds |= tag
+    pair.adds |= [tag]
+    self
   end
 
   def as_json
     {
       'type' => type,
       'e' => @e.map do |e, pair|
-        [e, pair.adds, pair.deletes]
+        [e, pair.adds, pair.removes]
       end
     }
   end
@@ -56,23 +71,24 @@ class Meangirls::ORSet < Meangirls::Set
   # UGH defensive copying
   def clone
     c = super
+    c.e = {}
     @e.each do |e, pair|
       c.merge_internal! e, pair.clone
     end
     c
   end
 
-  # Deletes e from self by cancelling all known tags.
-  # Returns nil if no changes, e otherwise.
-  def delete(e)
+  # Deletes e from self by cancelling all known tags (or a specific tag if
+  # given.) Returns nil if no changes, e otherwise.
+  def delete(e, tag = nil)
     pair = @e[e] or return
-    new = pair.adds - pair.deletes
+    new = pair.adds - pair.removes
     return if new.empty?
-    pair.deletes += new
+    pair.removes += new
     e
   end
 
-  # Merge with another OR-Set
+  # Merge with another OR-Set and return the merged copy.
   def merge(other)
     unless other.kind_of? self.class
       raise ArgumentError, "other must be a #{self.class}"
@@ -85,18 +101,31 @@ class Meangirls::ORSet < Meangirls::Set
     other.e.each do |e, pair|
       copy.merge_internal! e, pair
     end
+    copy
   end
 
   # Updates self with new adds and removes for an element.
   def merge_internal!(element, pair)
-    if (a,r) = @e[element]
-      a |= pair.adds
-      r |= pair.removes
+    if my = @e[element]
+      my.adds |= pair.adds
+      my.removes |= pair.removes
     else
       @e[element] = pair
     end
   end
-  
+
+  def to_set
+    s = Set.new
+    @e.each do |element, pair|
+      s << element unless (pair.adds - pair.removes).empty?
+    end
+    s
+  end
+
+  def type
+    'or-set'
+  end
+
   # Unordered array equality
   # TODO: slow
   def uaeq(a, b)

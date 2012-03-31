@@ -16,6 +16,8 @@ module Meangirls
       TwoPhaseSet.new s
     when 'lww-set'
       LWWSet.new s
+    when 'or-set'
+      ORSet.new s
     else
       raise ArgumentError, "unknown type #{s['type']}"
     end
