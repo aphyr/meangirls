@@ -7,4 +7,8 @@ class Meangirls::CRDT
       o1.merge o2
     end
   end
+
+  def to_json
+    as_json.to_json
+  end
 end

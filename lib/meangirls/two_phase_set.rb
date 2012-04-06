@@ -28,6 +28,7 @@ class Meangirls::TwoPhaseSet < Meangirls::Set
     @a << e
     self
   end
+  alias add <<
 
   # Strict equality: both adds and removes for both 2p-sets are equal.
   def ==(other)

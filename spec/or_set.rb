@@ -14,6 +14,7 @@ describe 'or-set' do
 
   behaves_like :crdt
   behaves_like :set
+  behaves_like :prob
 
   should '==' do
     a = @class.new
@@ -26,5 +27,15 @@ describe 'or-set' do
     a.should.not == b
     b.delete 1
     a.should == b
+  end
+
+  should 'preserve independent adds' do
+    test_merge @class.new do |sibs, merged|
+      sibs.inject(Set.new) do |present, sib|
+        present | sib.to_set
+      end.all? do |e|
+        merged.include? e
+      end
+    end
   end
 end
