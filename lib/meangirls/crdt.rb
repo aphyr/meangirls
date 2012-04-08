@@ -1,5 +1,6 @@
 class Meangirls::CRDT
   require 'meangirls/set'
+  require 'meangirls/counter'
 
   # Merge a list of CRDTs by folding over merge.
   def self.merge(*os)

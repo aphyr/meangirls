@@ -7,6 +7,7 @@ module Meangirls
   require 'set'
   require 'base64'
   require 'securerandom'
+  require 'socket'
   require 'meangirls/crdt'
   
   # Transforms a JSON data structure into a CRDT datatype.
@@ -18,11 +19,25 @@ module Meangirls
       LWWSet.new s
     when 'or-set'
       ORSet.new s
+    when 'g-counter'
+      GCounter.new s
     else
       raise ArgumentError, "unknown type #{s['type']}"
     end
   end
   module_function :parse
+
+  # The default node name.
+  def node
+    @node ||= Socket.gethostname
+  end
+  module_function :node
+
+  # Set the default node name.
+  def node=(node)
+    @node = node
+  end
+  module_function :node=
 
   # Return a pseudounique tag.
   def tag
