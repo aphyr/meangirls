@@ -37,6 +37,11 @@ class Meangirls::GCounter < Meangirls::Counter
     self
   end
 
+  # Adds delta to this counter, using the current Meangirls node ID.
+  def +(delta)
+    increment Meangirls.node, delta
+  end
+
   def clone
     c = super
     c.e = @e.clone
