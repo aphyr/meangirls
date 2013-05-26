@@ -30,7 +30,7 @@ shared :counter do
   should '+' do
     a = @s + 1
     a.should.be.kind_of? Meangirls::Counter
-    a.should == 1
+    a.should === 1
 
     b = @class.new.increment('foo', 2)
     b += 3
