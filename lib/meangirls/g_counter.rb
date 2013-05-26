@@ -50,7 +50,7 @@ class Meangirls::GCounter < Meangirls::Counter
   # Are any sums floating-point?
   def float?
     @e.any? do |k, v|
-      v.float?
+      v.is_a? Float
     end
   end
 
