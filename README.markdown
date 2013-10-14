@@ -3,11 +3,30 @@ Meangirls
 
 Serializable data types for eventually consistent systems.
 
-Sets
-===
+Installation
+============
 
-G-Set
----
+Install locally:
+
+``` bash
+$ bundle install
+$ rake build
+$ gem install pkg/meangirls-0.1.0.gem
+```
+
+Or, you can reference it from your `Gemfile`:
+
+``` ruby
+gem "meangirls", github: "aphyr/meangirls", branch: "master"
+```
+
+Data Types
+==========
+
+Sets
+----
+
+### G-Set
 
 Set union is commutative and convergent; hence it is always safe to have
 simultaneous writes to a set *which only allows addition*. You cannot remove an
@@ -22,8 +41,7 @@ JSON:
 }
 ```
 
-2P-Set
----
+### 2P-Set
 
 2-phase sets consist of two g-sets: one for adding, and another for removing.
 To add an element, add it to the add set A. To remove e, add e to the remove
@@ -43,8 +61,7 @@ JSON:
 
 In this set, only 'a' is present.
 
-LWW-Element-Set
----
+### LWW-Element-Set
 
 LWW-Element-Set is like 2P-Set: it comprises an add G-Set (A) and a remove
 G-Set (R), with a timestamp for each element. To add an element e, add (e,
@@ -93,8 +110,7 @@ In this set:
 - c was created after deletion; it exists
 - d was created and deleted at the same time. Bias a means we prefer adds, so it exists.
 
-OR-Set
----
+### OR-Set
 
 Observed-Removed Sets support adding and removing elements in a causally
 consistent manner. It resembles LWW-Set, except that instead of times, unique
@@ -132,8 +148,7 @@ JSON:
 - b's only insertion was deleted, so it does not exist.
 - c has two insertions, only one of which was deleted. It exists.
 
-Max-Change-Sets
----
+### Max-Change-Sets
 
 MC-Sets resolve divergent histories for an element by choosing the value which
 has changed the most. You cannot delete an element which is not present, and
@@ -174,10 +189,9 @@ JSON:
 - c is present
 
 Counters
-===
+--------
 
-G-Counter
----
+### G-Counter
 
 A G-Counter is a grow-only counter (inspired by vector clocks) in
 which only increment and merge are possible. Incrementing the counter
@@ -201,8 +215,7 @@ JSON:
 
 - The counter value is 8.
 
-PN-Counter
----
+### PN-Counter
 
 PN-Counters allow the counter to be decreased by tracking the
 increments (P) separate from the decrements (N), both represented as
