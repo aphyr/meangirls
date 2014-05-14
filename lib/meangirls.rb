@@ -10,6 +10,10 @@ module Meangirls
   require 'socket'
   require 'meangirls/crdt'
   
+  def fetch
+    false
+  end
+  
   # Transforms a JSON data structure into a CRDT datatype.
   def parse(s)
     case s['type']
