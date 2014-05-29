@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Serializable data types for eventually consistent systems.}
   spec.summary       = spec.description
   spec.homepage      = "https://github.com/aphyr/meangirls"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
