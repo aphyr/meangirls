@@ -25,7 +25,7 @@ class Meangirls::GCounter < Meangirls::Counter
   # Adds delta to this counter, as tracked by node. Returns self.
   def increment(node = 1, delta = 1)
     if delta < 0
-      raise ArgumentError, "Can't decrement a GCounter"
+      raise Meangirls::DecrementNotAllowed, "Can't decrement a GCounter"
     end
 
     if @e[node]
@@ -45,6 +45,7 @@ class Meangirls::GCounter < Meangirls::Counter
   def clone
     c = super
     c.e = @e.clone
+    c
   end
 
   # Are any sums floating-point?
@@ -57,18 +58,18 @@ class Meangirls::GCounter < Meangirls::Counter
   # Merge with another GCounter and return the merged copy.
   def merge(other)
     unless other.kind_of? self.class
-      raise ArgumentErrornew, "other must be a #{self.class}"
+      raise ArgumentError, "other must be a #{self.class}"
     end
 
     copy = clone
-    @e.each do |k, v|
-      if existing = copy.e[k]
-        copy.e[k] = v if v > existing
-      else
-        copy.e[k] = v
-      end
-    end
 
+    union = other.e.keys + @e.keys
+    union.each do |k|
+      counts = []
+      counts << other.e[k] if other.e[k]
+      counts << @e[k] if @e[k]
+      copy.e[k] = counts.max
+    end
     copy
   end
 
