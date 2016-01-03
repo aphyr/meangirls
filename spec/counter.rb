@@ -38,21 +38,50 @@ shared :counter do
   end
 
   should '-' do
+    a = @class.new
+    (a - 0).should === a
+    (a - 1).should === -1 rescue Meangirls::DecrementNotAllowed
   end
 
   should 'float?' do
-    @class.new.increment(1)
+    a = @class.new
+    a.float?.should.be.false
+    (a + 0.001).float?.should.be.true
   end
 
-  should 'merge' do
+  should 'merge with self' do
+    a = @class.new
+    a.merge(a).should === a
+  end
+
+  should 'merge with self after increment' do
+    a = @class.new
+    a + 1
+    a.merge(a).should === a
+  end
+
+  should 'merge independent increments' do
+    a = @class.new
+    b = @class.new
+    a.increment('a', 1)
+    b.increment('b', 1)
+    a.merge(b).should === 2
   end
 
   should 'increment' do
+    @s.increment('a', 1).should === 1
+    @s.increment('a', 1).should === 2
   end
 
   should 'to_i' do
+    @s.to_i.should === 0
+    (@s + 0.001).to_i.should === 0
+    (@s + 1).to_i.should === 1
   end
 
   should 'to_f' do
+    @s.to_f.should === 0.0
+    (@s + 0.001).to_f.should === 0.001
+    (@s + 1).to_f.should === 1.001
   end
 end
